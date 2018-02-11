@@ -1,6 +1,7 @@
 <?php 
 //  Connect to database
-$connection = mysqli_connect('localhost', 'root', 'password', 'dbname');
+mb_http_output( "UTF-8" );
+$connection = mysqli_connect('localhost', 'root', 'toto', 'peachco');
 
 //  Get the HTTP request method
 $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -52,13 +53,17 @@ function getMatches($query){
 		$query = preg_replace('/(\w+)/', '+$1', $query);
 		$sqlQuery = "SELECT * FROM static WHERE MATCH (sku,brand,collection,type,color,secPic) AGAINST ('$query' IN BOOLEAN MODE)LIMIT 100";
 	}
+	//  Make a connection to the database
 	if($connection->connect_errno == 0){
-		//  Get the response and put it in an array
+		//  Initialize an array to put the response into
 		$response = array();
+		//  Make the query and store the result in an array
 		$result = mysqli_query($connection, $sqlQuery);
-		while($row=mysqli_fetch_array($result)){
+		//  While there are still rows, keep fetching the result and stick each array in the response array
+		while($row=mysqli_fetch_assoc($result)){
 			$response[]=$row;
 		}
+		//  Close the connection
 		mysqli_close($connection);
 	} else {
 		die('Unable to connect to database. [' . $connection->connect_error . ']');
@@ -69,10 +74,10 @@ function getMatches($query){
             $item = utf8_encode($item);
         }
     });
-    //  Encode in JSON and return response
-	//var_dump($response);
+	//  Encode in JSON and return response
 	header('Content-Type: application/json');
-	return json_encode($response);
+	echo json_encode($response);
+	
 }
 
 function addItem(){
