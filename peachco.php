@@ -1,7 +1,7 @@
 <?php 
 //  Connect to database
 mb_http_output( "UTF-8" );
-$connection = mysqli_connect('localhost', 'root', 'toto', 'peachco');
+$connection = mysqli_connect('localhost', 'root', 'user', 'password');
 
 //  Get the HTTP request method
 $requestMethod = $_SERVER['REQUEST_METHOD'];
